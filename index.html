@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Richard Rice | AI Professional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-dark: #020c1b;
+            --bg-medium: #0a192f;
+            --neon-blue: #00d9ff;
+            --glow-color: rgba(0, 217, 255, 0.6);
+            --text-light: #ccd6f6;
+            --text-dark: #8892b0;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.imgur.com/QRBcwWk.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color), 0 0 15px var(--glow-color);
+        }
+        .neon-text {
+            color: var(--neon-blue);
+            text-shadow: 0 0 3px var(--neon-blue), 0 0 5px var(--neon-blue);
+        }
+
+        .main-title-glow {
+             text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--glow-color);
+        }
+
+        .futuristic-box {
+            background: linear-gradient(145deg, rgba(10, 25, 47, 0.8), rgba(2, 12, 27, 0.8));
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+            clip-path: polygon(0% 15px, 15px 0%, 100% 0%, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0% 100%);
+            transition: all 0.3s ease;
+        }
+        .futuristic-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+        
+        .futuristic-btn {
+            background-color: var(--neon-blue);
+            color: var(--bg-dark);
+            clip-path: polygon(0% 10px, 10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%);
+        }
+
+        /* Custom scrollbar for a better look */
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chat-messages::-webkit-scrollbar-track {
+            background: var(--bg-medium);
+        }
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 3px;
+        }
+
+        /* Orbiting Animation */
+        .orbit-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 3rem auto;
+        }
+        .orbit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            font-size: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 0 15px var(--glow-color) inset;
+        }
+        .orbiting-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -20px; 
+            margin-left: -50px;
+            transform-origin: 50px 20px;
+            animation: orbit 32s linear infinite;
+            width: 100px;
+            height: 40px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--bg-dark);
+            z-index: 5;
+            background-color: var(--neon-blue);
+            clip-path: polygon(0% 8px, 8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%);
+        }
+        .orbiting-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+        
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(var(--orbit-radius)) rotate(0deg); }
+            to   { transform: rotate(360deg) translateX(var(--orbit-radius)) rotate(-360deg); }
+        }
+
+        .orbit-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; /* Ensure lines are behind buttons */
+        }
+        .orbit-line {
+            stroke: var(--neon-blue);
+            stroke-width: 1;
+            opacity: 0.5;
+        }
+
+        .orbiting-thumbnail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin-top: -25px;
+            margin-left: -25px;
+            transform-origin: 25px 25px;
+            animation: orbit 32s linear infinite;
+            z-index: 4;
+            cursor: pointer;
+        }
+        .orbiting-thumbnail img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+        .orbiting-thumbnail:hover img {
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        /* Mobile Orbit Config */
+        .project-1 { --orbit-radius: 140px; animation-delay: 0s; }
+        .thumb-1 { --orbit-radius: 115px; animation-delay: -2.9s; }
+        .thumb-2 { --orbit-radius: 85px; animation-delay: -5.8s; }
+        .project-2 { --orbit-radius: 140px; animation-delay: -8.7s; }
+        .thumb-3 { --orbit-radius: 110px; animation-delay: -11.6s; }
+        .thumb-4 { --orbit-radius: 90px; animation-delay: -14.5s; }
+        .project-3 { --orbit-radius: 140px; animation-delay: -17.4s; }
+        .thumb-5 { --orbit-radius: 115px; animation-delay: -20.3s; }
+        .thumb-6 { --orbit-radius: 85px; animation-delay: -23.2s; }
+        .project-4 { --orbit-radius: 140px; animation-delay: -26.1s; }
+        .thumb-7 { --orbit-radius: 110px; animation-delay: -29s; }
+        
+        
+        /* Larger screens */
+        @media (min-width: 768px) {
+            .orbit-container {
+                width: 500px;
+                height: 500px;
+            }
+            .orbit-center {
+                width: 150px;
+                height: 150px;
+                font-size: 1.25rem;
+            }
+            .orbiting-item {
+                margin-top: -25px; 
+                margin-left: -60px;
+                transform-origin: 60px 25px;
+                width: 120px;
+                height: 50px;
+                font-size: 1rem;
+            }
+            .orbiting-thumbnail {
+                 width: 70px;
+                height: 70px;
+                margin-top: -35px;
+                margin-left: -35px;
+                transform-origin: 35px 35px;
+            }
+            
+            .project-1 { --orbit-radius: 240px; }
+            .project-2 { --orbit-radius: 240px; }
+            .project-3 { --orbit-radius: 240px; }
+            .project-4 { --orbit-radius: 240px; }
+
+            .thumb-1 { --orbit-radius: 210px; }
+            .thumb-2 { --orbit-radius: 150px; }
+            .thumb-3 { --orbit-radius: 200px; }
+            .thumb-4 { --orbit-radius: 160px; }
+            .thumb-5 { --orbit-radius: 210px; }
+            .thumb-6 { --orbit-radius: 150px; }
+            .thumb-7 { --orbit-radius: 200px; }
+        }
+
+        /* Certificate Modal */
+        #certificate-modal, #artwork-modal {
+            background-color: rgba(2, 12, 27, 0.9);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <!-- Header & Navigation -->
+    <header class="bg-black/50 backdrop-blur-sm sticky top-0 z-40 border-b border-cyan-500/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#home" id="home-link-nav" class="nav-link text-xl md:text-2xl font-bold neon-text">Richard Rice</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#projects" id="projects-link-nav" class="nav-link text-gray-300 hover:neon-text px-3 py-2 rounded-md text-sm font-medium transition-colors">Projects</a>
+                        <a href="#skills" id="skills-link-nav" class="nav-link text-gray-300 hover:neon-text px-3 py-2 rounded-md text-sm font-medium transition-colors">Skills</a>
+                        <a href="#experience" id="experience-link-nav" class="nav-link text-gray-300 hover:neon-text px-3 py-2 rounded-md text-sm font-medium transition-colors">Experience</a>
+                        <a href="#contact" class="nav-link text-gray-300 hover:neon-text px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <span class="sr-only">Open main menu</span>
+                        <i data-lucide="menu" class="block h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#projects" id="projects-link-mobile" class="nav-link text-gray-300 hover:neon-text block px-3 py-2 rounded-md text-base font-medium transition-colors">Projects</a>
+                <a href="#skills" id="skills-link-mobile" class="nav-link text-gray-300 hover:neon-text block px-3 py-2 rounded-md text-base font-medium transition-colors">Skills</a>
+                <a href="#experience" id="experience-link-mobile" class="nav-link text-gray-300 hover:neon-text block px-3 py-2 rounded-md text-base font-medium transition-colors">Experience</a>
+                <a href="#contact" class="nav-link text-gray-300 hover:neon-text block px-3 py-2 rounded-md text-base font-medium transition-colors">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="home-page">
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Hero Section -->
+            <section class="text-center py-10 md:py-20">
+                <h1 class="text-4xl md:text-7xl font-extrabold tracking-tight text-white uppercase main-title-glow">Richard Rice</h1>
+                <p class="mt-4 text-xl md:text-3xl font-semibold neon-text uppercase">AI Professional</p>
+                <p class="mt-6 max-w-2xl mx-auto text-base md:text-lg text-gray-300 font-sans">
+                    Aspiring AI professional with a strong foundation in generative AI and prompt engineering, complemented by 10+ years of customer service experience in analyzing user needs and troubleshooting complex issues.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#projects" id="projects-link-hero" class="nav-link futuristic-btn font-bold py-3 px-8 text-lg w-full sm:w-auto transition-all transform hover:scale-105 neon-glow">View Projects</a>
+                    <a href="#contact" class="nav-link futuristic-btn font-bold py-3 px-8 text-lg w-full sm:w-auto transition-all transform hover:scale-105 neon-glow">Contact Me</a>
+                </div>
+                <div class="mt-12">
+                    <img 
+                        src="https://i.imgur.com/2g60oRB.jpeg" 
+                        alt="Richard Rice Portrait" 
+                        class="w-48 h-48 md:w-56 md:h-56 mx-auto rounded-full object-cover border-4 border-cyan-500/50 shadow-lg neon-glow"
+                        onerror="this.onerror=null;this.src='https://placehold.co/224x224/020c1b/00d9ff?text=RR';"
+                    >
+                </div>
+            </section>
+
+            <!-- Quick Access Icons -->
+            <section class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 my-20">
+                <a href="#projects" id="projects-link-icon" class="nav-link futuristic-box p-4 md:p-6 text-center">
+                    <i data-lucide="play-square" class="h-10 w-10 md:h-12 md:w-12 mx-auto neon-text"></i>
+                    <h3 class="mt-4 text-base md:text-lg font-semibold">Projects</h3>
+                </a>
+                <a href="#skills" id="skills-link-icon" class="nav-link futuristic-box p-4 md:p-6 text-center">
+                    <i data-lucide="lightbulb" class="h-10 w-10 md:h-12 md:w-12 mx-auto neon-text"></i>
+                    <h3 class="mt-4 text-base md:text-lg font-semibold">Skills</h3>
+                </a>
+                <a href="#experience" id="experience-link-icon" class="nav-link futuristic-box p-4 md:p-6 text-center">
+                    <i data-lucide="briefcase" class="h-10 w-10 md:h-12 md:w-12 mx-auto neon-text"></i>
+                    <h3 class="mt-4 text-base md:text-lg font-semibold">Experience</h3>
+                </a>
+                <a href="#contact" class="nav-link futuristic-box p-4 md:p-6 text-center">
+                    <i data-lucide="mail" class="h-10 w-10 md:h-12 md:w-12 mx-auto neon-text"></i>
+                    <h3 class="mt-4 text-base md:text-lg font-semibold">Contact</h3>
+                </a>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-20 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 neon-text uppercase">Get In Touch</h2>
+                <p class="text-gray-300 max-w-xl mx-auto mb-8 font-sans">I'm currently looking for new opportunities. Feel free to reach out via any of the methods below.</p>
+                
+                <div class="futuristic-box max-w-4xl mx-auto p-6 md:p-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <!-- Email -->
+                        <a href="mailto:Rickrice2nd@gmail.com" class="p-4 rounded-lg hover:bg-cyan-500/10 transition-colors group">
+                            <i data-lucide="mail" class="h-10 w-10 mx-auto text-cyan-400 group-hover:neon-text transition-colors"></i>
+                            <p class="mt-2 text-lg font-semibold">Email</p>
+                            <p class="text-sm text-gray-400 group-hover:text-white transition-colors font-sans break-all">Rickrice2nd@gmail.com</p>
+                        </a>
+                        <!-- GitHub -->
+                        <a href="https://github.com/AIGeneratedLoki" target="_blank" rel="noopener noreferrer" class="p-4 rounded-lg hover:bg-cyan-500/10 transition-colors group">
+                            <i data-lucide="github" class="h-10 w-10 mx-auto text-cyan-400 group-hover:neon-text transition-colors"></i>
+                            <p class="mt-2 text-lg font-semibold">GitHub</p>
+                            <p class="text-sm text-gray-400 group-hover:text-white transition-colors font-sans">AIGeneratedLoki</p>
+                        </a>
+                        <!-- Phone -->
+                        <a href="tel:6024054831" class="p-4 rounded-lg hover:bg-cyan-500/10 transition-colors group">
+                            <i data-lucide="phone" class="h-10 w-10 mx-auto text-cyan-400 group-hover:neon-text transition-colors"></i>
+                            <p class="mt-2 text-lg font-semibold">Phone</p>
+                            <p class="text-sm text-gray-400 group-hover:text-white transition-colors font-sans">602-405-4831</p>
+                        </a>
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/in/rick-rice-516135257/" target="_blank" rel="noopener noreferrer" class="p-4 rounded-lg hover:bg-cyan-500/10 transition-colors group">
+                            <i data-lucide="linkedin" class="h-10 w-10 mx-auto text-cyan-400 group-hover:neon-text transition-colors"></i>
+                            <p class="mt-2 text-lg font-semibold">LinkedIn</p>
+                            <p class="text-sm text-gray-400 group-hover:text-white transition-colors font-sans">rick-rice-516135257</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="projects-page" class="hidden">
+         <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+            <button id="back-to-home-projects" class="nav-link mb-8 futuristic-btn font-bold py-2 px-4 inline-flex items-center gap-2">
+                <i data-lucide="arrow-left"></i>
+                Back to Home
+            </button>
+            <h1 class="text-3xl md:text-4xl font-bold neon-text uppercase">Projects</h1>
+            <div class="orbit-container">
+                <svg class="orbit-lines">
+                    <line class="orbit-line" id="line-1"></line>
+                    <line class="orbit-line" id="line-2"></line>
+                    <line class="orbit-line" id="line-3"></line>
+                    <line class="orbit-line" id="line-4"></line>
+                </svg>
+                <div class="orbit-center">PROJECTS</div>
+
+                <!-- Projects -->
+                <a href="https://aigeneratedloki.github.io/Heros-Agenda/" target="_blank" rel="noopener noreferrer" class="orbiting-item project-1">Gamified Tasks</a>
+                <a href="https://aigeneratedloki.github.io/Stats-chat/" target="_blank" rel="noopener noreferrer" class="orbiting-item project-2">Sports Chatbot</a>
+                <a href="https://docs.google.com/document/d/1JJZanxMtiMUWti52eLFNR8nTLq8PL8n1kk6eh63ZSRI/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="orbiting-item project-3">AI Narrative</a>
+                <a href="https://AIGeneratedLoki.github.io/Movie-Night-Bingo" target="_blank" rel="noopener noreferrer" class="orbiting-item project-4">Movie Night App</a>
+
+                <!-- Thumbnails -->
+                <div class="orbiting-thumbnail thumb-1 artwork-item"><img src="https://i.imgur.com/PptW7cq.jpeg" alt="Artwork 1"></div>
+                <div class="orbiting-thumbnail thumb-2 artwork-item"><img src="https://i.imgur.com/iqlESIs.jpeg" alt="Throne"></div>
+                <div class="orbiting-thumbnail thumb-3 artwork-item"><img src="https://i.imgur.com/zb9awCJ.jpeg" alt="Artwork 3"></div>
+                <div class="orbiting-thumbnail thumb-4 artwork-item"><img src="https://i.imgur.com/axdn3OQ.jpeg" alt="Skull Tray"></div>
+                <div class="orbiting-thumbnail thumb-5 artwork-item"><img src="https://i.imgur.com/47wZqWL.jpeg" alt="Key"></div>
+                <div class="orbiting-thumbnail thumb-6 artwork-item"><img src="https://i.imgur.com/bEqD1Zj.jpeg" alt="Dice Tray"></div>
+                <div class="orbiting-thumbnail thumb-7 artwork-item"><img src="https://i.imgur.com/FymfX4K.jpeg" alt="New Artwork"></div>
+                <div class="orbiting-thumbnail thumb-8 artwork-item"><img src="https://i.imgur.com/l2v71il.jpeg" alt="Artwork 7"></div>
+
+            </div>
+             <!-- Project Details Section -->
+             <div class="futuristic-box p-8 flex flex-col mt-12 max-w-4xl mx-auto text-left">
+                <h3 class="text-xl md:text-2xl font-bold neon-text">AI-Powered Gamified Task Manager</h3>
+                <p class="mt-4 text-gray-400 flex-grow font-sans">Engineered a daily agenda application in Python using the Gemini API to generate personalized task lists. Implemented a gamification system with experience points and in-game currency upon task completion to drive engagement and user retention.</p>
+             </div>
+             <div class="futuristic-box p-8 flex flex-col mt-8 max-w-4xl mx-auto text-left">
+                <h3 class="text-xl md:text-2xl font-bold neon-text">AI Sports Analytics Chatbot</h3>
+                <p class="mt-4 text-gray-400 flex-grow font-sans">Developed a sports analytics tool in Python with the Gemini API to retrieve and present detailed player statistics. The chatbot provides sports betting odds and tips, leveraging conversational AI to simulate a knowledgeable analyst and persists chat logs.</p>
+             </div>
+             <div class="futuristic-box p-8 flex flex-col mt-8 max-w-4xl mx-auto text-left">
+                <h3 class="text-xl md:text-2xl font-bold neon-text">Movie Night App</h3>
+                <p class="mt-4 text-gray-400 flex-grow font-sans">An interactive bingo game for movie nights. Users can generate custom bingo cards based on common movie tropes and clichés, adding a fun, competitive element to watching films with friends.</p>
+             </div>
+             <div class="futuristic-box p-8 flex flex-col mt-8 max-w-4xl mx-auto text-left">
+                <h3 class="text-xl md:text-2xl font-bold neon-text">Interactive AI-Generated Narrative</h3>
+                <p class="mt-4 text-gray-400 flex-grow font-sans">Authored a "Choose Your Own Adventure" story in the horror genre, utilizing Gemini API to generate the core narrative and branching plotlines. Employed advanced prompt engineering to deconstruct the story into interactive, user-driven segments.</p>
+             </div>
+         </main>
+    </div>
+
+    <div id="skills-page" class="hidden">
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <button id="back-to-home-skills" class="nav-link mb-8 futuristic-btn font-bold py-2 px-4 inline-flex items-center gap-2">
+                <i data-lucide="arrow-left"></i>
+                Back to Home
+            </button>
+            <h1 class="text-3xl md:text-4xl font-bold neon-text uppercase text-center">Skills & Certifications</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                <div class="futuristic-box p-6">
+                    <h2 class="text-2xl neon-text mb-4">Technical Skills</h2>
+                    <ul class="font-sans space-y-2 text-gray-300">
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> Generative AI & Prompt Engineering</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> AI Agent Development</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> User-Centric Analysis & Troubleshooting</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> Content Creation (Podcasts, Reviews)</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> 3D Animation & Graphic Design</li>
+                    </ul>
+                </div>
+                <div class="futuristic-box p-6">
+                    <h2 class="text-2xl neon-text mb-4">Software & Tools</h2>
+                    <ul class="font-sans space-y-2 text-gray-300">
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> AI: Gemini, ChatGPT, DALL-E, Midjourney</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> Design: Inkscape, Medibang, Tinkercad, Blender</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> Audio/Visual: Podcast Editing Software</li>
+                        <li><i data-lucide="chevron-right" class="inline-block w-4 h-4 text-cyan-400"></i> Platforms: CRM & CMS Systems</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold neon-text uppercase text-center mt-20 mb-8">Certifications</h2>
+            <div class="flex flex-wrap justify-center -mx-4">
+                <div class="w-full sm:w-1/2 lg:w-1/3 p-4">
+                    <div class="futuristic-box p-4 cursor-pointer certificate-item h-full">
+                        <img src="https://i.imgur.com/yK2JNez.png" alt="Certificate 1" class="w-full h-auto">
+                    </div>
+                </div>
+                <div class="w-full sm:w-1/2 lg:w-1/3 p-4">
+                    <div class="futuristic-box p-4 cursor-pointer certificate-item h-full">
+                        <img src="https://i.imgur.com/qbskbek.png" alt="Certificate 2" class="w-full h-auto">
+                    </div>
+                </div>
+                <div class="w-full sm:w-1/2 lg:w-1/3 p-4">
+                    <div class="futuristic-box p-4 cursor-pointer certificate-item h-full">
+                        <img src="https://i.imgur.com/V3fBToB.png" alt="Certificate 3" class="w-full h-auto">
+                    </div>
+                </div>
+                <div class="w-full sm:w-1/2 lg:w-1/3 p-4">
+                    <div class="futuristic-box p-4 cursor-pointer certificate-item h-full">
+                        <img src="https://i.imgur.com/xHXXO76.png" alt="Certificate 4" class="w-full h-auto">
+                    </div>
+                </div>
+                <div class="w-full sm:w-1/2 lg:w-1/3 p-4 lg:mx-auto">
+                    <div class="futuristic-box p-4 cursor-pointer certificate-item h-full">
+                        <img src="https://i.imgur.com/aOBhHX7.png" alt="Certificate 5" class="w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="experience-page" class="hidden">
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <button id="back-to-home-experience" class="nav-link mb-8 futuristic-btn font-bold py-2 px-4 inline-flex items-center gap-2">
+                <i data-lucide="arrow-left"></i>
+                Back to Home
+            </button>
+            <h1 class="text-3xl md:text-4xl font-bold neon-text uppercase text-center">Experience & Hobbies</h1>
+
+            <div class="futuristic-box p-8 mt-12 max-w-4xl mx-auto text-left font-sans space-y-4 text-gray-300">
+                <p>My journey with technology began with a deep-seated curiosity for how things work, leading me to build my first computer as a teenager. This hands-on experience sparked a lifelong passion for learning and mastering new technologies. I thrive on diving into complex systems, whether it's troubleshooting software or exploring the latest advancements in artificial intelligence.</p>
+                <p>This passion extends into my creative hobbies. I frequently use Tinkercad to design and model unique items, which I then bring to life with my 3D printer. The process doesn't stop there; I also enjoy the artistic challenge of painting these models, adding a personal touch to every creation. This blend of technical design and hands-on artistry allows me to bridge the gap between digital concepts and tangible results.</p>
+                <p>In my professional development, I've embraced AI as a powerful creative and logical partner. I leverage AI tools to assist in writing Python code, accelerating development and enabling me to build more complex and innovative applications. This collaborative approach allows me to focus on high-level problem-solving and design, while AI handles the more routine aspects of coding, ultimately making me a more efficient and effective builder.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold neon-text uppercase text-center mt-20 mb-8">3D Models & Artwork</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/PptW7cq.jpeg" alt="Artwork 1" class="w-full h-auto">
+                </div>
+                 <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/iqlESIs.jpeg" alt="Throne" class="w-full h-auto">
+                </div>
+                 <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/zb9awCJ.jpeg" alt="Artwork 3" class="w-full h-auto">
+                </div>
+                <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/axdn3OQ.jpeg" alt="Skull Tray" class="w-full h-auto">
+                </div>
+                 <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/47wZqWL.jpeg" alt="Key" class="w-full h-auto">
+                </div>
+                <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/bEqD1Zj.jpeg" alt="Dice Tray" class="w-full h-auto">
+                </div>
+                <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/l2v71il.jpeg" alt="Artwork 6" class="w-full h-auto">
+                </div>
+                <div class="futuristic-box p-4 artwork-item cursor-pointer">
+                    <img src="https://i.imgur.com/FymfX4K.jpeg" alt="New Artwork" class="w-full h-auto">
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-black/50 border-t border-cyan-500/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-gray-500">
+            <p>&copy; 2024 Richard Rice. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Certificate Modal -->
+    <div id="certificate-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="futuristic-box p-4 relative max-w-4xl max-h-[90vh] w-full">
+            <img id="modal-img" src="" alt="Certificate" class="w-full h-full object-contain">
+            <button id="close-modal" class="futuristic-btn font-bold py-2 px-6 mt-4 mx-auto block">Close</button>
+        </div>
+    </div>
+    
+    <!-- Artwork Modal -->
+    <div id="artwork-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="futuristic-box p-4 relative max-w-4xl max-h-[90vh] w-full">
+            <img id="artwork-modal-img" src="" alt="Artwork" class="w-full h-full object-contain">
+            <button id="close-artwork-modal" class="futuristic-btn font-bold py-2 px-6 mt-4 mx-auto block">Back</button>
+        </div>
+    </div>
+
+
+    <!-- AI Chatbot Feature -->
+    <div id="chat-container" class="fixed bottom-5 right-5 z-50">
+        <button id="chat-bubble" class="bg-cyan-500 text-black w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform neon-glow">
+            <i data-lucide="message-circle" class="w-8 h-8"></i>
+        </button>
+        <div id="chat-window" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 h-[32rem] rounded-xl shadow-2xl flex flex-col transition-all duration-300 origin-bottom-right futuristic-box">
+            <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
+                <h3 class="font-bold text-lg neon-text">Ask about Richard</h3>
+                <button id="close-chat" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 font-sans">
+                <div class="flex">
+                    <div class="bg-gray-700 p-3 rounded-lg max-w-xs">
+                        <p class="text-sm">Hi! I'm an AI assistant. Ask me anything about Richard's resume, like "What are his key skills?" or "Tell me about his sports analytics project."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-cyan-500/30">
+                <form id="chat-form" class="flex items-center gap-2">
+                    <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 bg-gray-900 border border-cyan-500/50 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm font-sans">
+                    <button type="submit" class="bg-cyan-500 text-black p-2 rounded-lg hover:bg-cyan-400 transition-colors">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Page Navigation
+        const homePage = document.getElementById('home-page');
+        const projectsPage = document.getElementById('projects-page');
+        const skillsPage = document.getElementById('skills-page');
+        const experiencePage = document.getElementById('experience-page');
+        const navLinks = document.querySelectorAll('.nav-link');
+        let animationFrameId = null;
+
+
+        function showPage(pageId) {
+            homePage.classList.add('hidden');
+            projectsPage.classList.add('hidden');
+            skillsPage.classList.add('hidden');
+            experiencePage.classList.add('hidden');
+
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            if (pageId === 'projects-page') {
+                setTimeout(startLineAnimation, 50);
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function startLineAnimation() {
+            const container = document.querySelector('.orbit-container');
+            if (!container) return;
+            const items = document.querySelectorAll('.orbiting-item');
+            const lines = document.querySelectorAll('.orbit-line');
+            const centerX = container.offsetWidth / 2;
+            const centerY = container.offsetHeight / 2;
+            const centerRadius = container.querySelector('.orbit-center').offsetWidth / 2; 
+
+            function updateLines() {
+                items.forEach((item, index) => {
+                    const itemRect = item.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+
+                    const itemX = itemRect.left + itemRect.width / 2 - containerRect.left;
+                    const itemY = itemRect.top + itemRect.height / 2 - containerRect.top;
+                    
+                    const angle = Math.atan2(itemY - centerY, itemX - centerX);
+
+                    const lineStartX = centerX + centerRadius * Math.cos(angle);
+                    const lineStartY = centerY + centerRadius * Math.sin(angle);
+
+                    const line = lines[index];
+                    if (line) {
+                        line.setAttribute('x1', lineStartX);
+                        line.setAttribute('y1', lineStartY);
+                        line.setAttribute('x2', itemX);
+                        line.setAttribute('y2', itemY);
+                    }
+                });
+                animationFrameId = requestAnimationFrame(updateLines);
+            }
+            updateLines();
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (!href) { 
+                    e.preventDefault();
+                    showPage('home-page');
+                    return;
+                }
+
+                if (href.includes('projects')) {
+                    e.preventDefault();
+                    showPage('projects-page');
+                } else if (href.includes('skills')) {
+                    e.preventDefault();
+                    showPage('skills-page');
+                } else if (href.includes('experience')) {
+                    e.preventDefault();
+                    showPage('experience-page');
+                } else if (href.includes('home')) {
+                     e.preventDefault();
+                    showPage('home-page');
+                } else { // Fallback for anchor links on home page like #contact
+                    showPage('home-page');
+                    setTimeout(() => {
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if(targetElement) {
+                           targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 100);
+                }
+            });
+        });
+        
+        document.getElementById('back-to-home-projects').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('home-page');
+        });
+        document.getElementById('back-to-home-skills').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('home-page');
+        });
+         document.getElementById('back-to-home-experience').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('home-page');
+        });
+
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Certificate Modal Logic
+        const certModal = document.getElementById('certificate-modal');
+        const certModalImg = document.getElementById('modal-img');
+        const closeCertModal = document.getElementById('close-modal');
+        const certificateItems = document.querySelectorAll('.certificate-item');
+
+        certificateItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                certModalImg.src = imgSrc;
+                certModal.classList.remove('hidden');
+            });
+        });
+
+        closeCertModal.addEventListener('click', () => {
+            certModal.classList.add('hidden');
+        });
+        certModal.addEventListener('click', (e) => {
+            if (e.target === certModal) {
+                 certModal.classList.add('hidden');
+            }
+        });
+        
+        // Artwork Modal Logic
+        const artworkModal = document.getElementById('artwork-modal');
+        const artworkModalImg = document.getElementById('artwork-modal-img');
+        const closeArtworkModal = document.getElementById('close-artwork-modal');
+        const artworkItems = document.querySelectorAll('.artwork-item');
+
+        artworkItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent the main container click
+                const imgSrc = item.querySelector('img').src;
+                artworkModalImg.src = imgSrc;
+                artworkModal.classList.remove('hidden');
+            });
+        });
+
+        closeArtworkModal.addEventListener('click', () => {
+            artworkModal.classList.add('hidden');
+        });
+        artworkModal.addEventListener('click', (e) => {
+            if (e.target === artworkModal) {
+                 artworkModal.classList.add('hidden');
+            }
+        });
+
+
+        // AI Chatbot UI Logic
+        const chatBubble = document.getElementById('chat-bubble');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        chatBubble.addEventListener('click', () => {
+            chatWindow.classList.toggle('hidden');
+            chatWindow.classList.toggle('flex');
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+            chatWindow.classList.remove('flex');
+        });
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                chatInput.value = '';
+                getAIResponse(message);
+            }
+        });
+
+        function addMessage(text, sender, isLoading = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : ''}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = `p-3 rounded-lg max-w-xs text-sm ${sender === 'user' ? 'bg-cyan-600 text-white' : 'bg-gray-700'}`;
+            
+            if (isLoading) {
+                contentDiv.innerHTML = `<div class="flex items-center space-x-2"><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div></div>`;
+                messageDiv.id = 'loading-indicator';
+            } else {
+                contentDiv.textContent = text;
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function getAIResponse(userQuery) {
+            addMessage('', 'bot', true);
+
+            const systemPrompt = `
+                You are a helpful AI assistant for Richard Rice's personal portfolio website. 
+                Your goal is to answer questions from potential employers based *only* on the information provided below.
+                Be friendly, professional, and concise. Do not make up information. If a question is outside the scope of the provided resume, politely state that you can only answer questions about Richard's professional background.
+
+                --- RESUME INFORMATION ---
+                Name: Richard Rice
+                Title: AI Professional
+
+                Professional Summary: 
+                An aspiring AI professional building a strong foundation in generative AI tools and prompt engineering, with practical experience in models including DALL-E and Claude 3. Has over 10 years of experience in customer service, excelling at analyzing user requests, troubleshooting complex issues, and understanding the core of a problem. This background gives a distinct advantage in creating effective prompts and training AI agents that are intuitive and user-friendly. Seeking a role to apply this blend of technical skill and user-centric insight.
+
+                Key Skills:
+                - Generative AI & Prompt Engineering: Expertise in crafting and refining prompts for high-quality image and media generation using models such as DALL-E, Claude 3, Midjourney, and Stable Diffusion.
+                - AI Agent Development: Foundational knowledge in the process of building and training custom AI agents to address specific, targeted needs and tasks.
+                - User-Centric Analysis: Leveraging over a decade of customer service experience to analyze user requests, accurately interpret intent, and troubleshoot technical issues.
+                - AI Tools: ChatGPT, Gemini, Perplexity.
+                - Art Programs: Proficient in Inkscape, Medibang, Tinkercad, and actively learning Blender.
+
+                Projects:
+                1. AI-Powered Gamified Task Manager: Engineered a daily agenda application in Python that uses the Gemini API to generate personalized task lists for users. Implemented a gamification system that rewards users with experience points and in-game currency upon task completion to drive engagement and user retention.
+                2. AI Sports Analytics Chatbot: Developed a sports analytics tool using Python and the Gemini API to retrieve and present detailed player statistics based on user queries. Built an interactive chatbot that provides sports betting odds and tips, leveraging conversational AI to simulate a knowledgeable sports analyst. Integrated a feature to record and recall previous chat logs.
+                3. Interactive AI-Generated Narrative: Authored a "Choose Your Own Adventure" story in the horror genre, utilizing Gemini API to generate the core narrative, branching plotlines, and descriptive text. Employed advanced prompt engineering techniques to deconstruct the AI-generated story into interactive segments.
+
+                Professional Experience:
+                - DoorDash (Dasher/Delivery Driver, 2022-Present): Maintained a 4.9-star customer rating, resolved delivery issues.
+                - Asurion (Tech Coach, 2014-2017): Resolved 50+ technical issues weekly, achieved a top 10% Net Promoter Score (NPS), trained new hires.
+                - Droidscanada.ca (Content Creator & Reviewer, 2012-2019): Produced 100+ podcasts, reviews, and interviews.
+
+                Contact:
+                - Email: rickrice2nd@gmail.com
+                - LinkedIn: linkedin.com/in/rick-rice-516135257
+                --- END OF RESUME INFORMATION ---
+            `;
+
+            const apiKey = ""; // API key is handled by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+            
+            let responseText = "Sorry, I encountered an error. Please try again.";
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    responseText = candidate.content.parts[0].text;
+                } else {
+                   responseText = "I'm sorry, I couldn't generate a response. Please rephrase your question.";
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+            } finally {
+                const loadingIndicator = document.getElementById('loading-indicator');
+                if (loadingIndicator) {
+                    loadingIndicator.remove();
+                }
+                addMessage(responseText, 'bot');
+            }
+        }
+    </script>
+</body>
+</html>
+
+
