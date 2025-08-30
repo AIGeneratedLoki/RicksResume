@@ -72,18 +72,6 @@
             clip-path: polygon(0% 10px, 10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%);
         }
 
-        /* Custom scrollbar for a better look */
-        #chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        #chat-messages::-webkit-scrollbar-track {
-            background: var(--bg-medium);
-        }
-        #chat-messages::-webkit-scrollbar-thumb {
-            background: var(--neon-blue);
-            border-radius: 3px;
-        }
-
         /* Orbiting Animation */
         .orbit-container {
             position: relative;
@@ -241,10 +229,6 @@
             background-color: rgba(2, 12, 27, 0.9);
         }
 
-        #chat-window {
-            background: linear-gradient(145deg, var(--bg-medium), var(--bg-dark));
-        }
-
     </style>
 </head>
 <body>
@@ -349,7 +333,7 @@
                         <!-- Phone -->
                         <a href="tel:6024054831" class="p-4 rounded-lg hover:bg-cyan-500/10 transition-colors group">
                             <i data-lucide="phone" class="h-10 w-10 mx-auto text-cyan-400 group-hover:neon-text transition-colors"></i>
-                            <p class="mt-2 text-lg font-semibold">Phone</p>
+                            <p class="mt-2 text-lg font-semibold">Phone/Text</p>
                             <p class="text-sm text-gray-400 group-hover:text-white transition-colors font-sans">602-405-4831</p>
                         </a>
                         <!-- LinkedIn -->
@@ -493,6 +477,9 @@
             </div>
 
             <h2 class="text-3xl font-bold neon-text uppercase text-center mt-20 mb-8">3D Models & Artwork</h2>
+             <p class="text-center text-gray-400 font-sans text-sm mb-8 italic">
+                *Disclaimer: All items are handmade. AI was used to edit and remove the backgrounds for a cleaner presentation.
+            </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="futuristic-box p-4 artwork-item cursor-pointer">
                     <img src="https://i.imgur.com/PptW7cq.jpeg" alt="Artwork 1" class="w-full h-auto">
@@ -545,38 +532,6 @@
             <button id="close-artwork-modal" class="futuristic-btn font-bold py-2 px-6 mt-4 mx-auto block">Back</button>
         </div>
     </div>
-
-
-    <!-- AI Chatbot Feature -->
-    <div id="chat-container" class="fixed bottom-5 right-5 z-50">
-        <button id="chat-bubble" class="bg-cyan-500 text-black w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform neon-glow">
-            <i data-lucide="message-circle" class="w-8 h-8"></i>
-        </button>
-        <div id="chat-window" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 h-[32rem] rounded-xl shadow-2xl flex flex-col transition-all duration-300 origin-bottom-right futuristic-box">
-            <div class="flex justify-between items-center p-4 border-b border-cyan-500/30">
-                <h3 class="font-bold text-lg neon-text">Ask about Richard</h3>
-                <button id="close-chat" class="text-gray-400 hover:text-white">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 font-sans">
-                <div class="flex">
-                    <div class="bg-gray-700 p-3 rounded-lg max-w-xs">
-                        <p class="text-sm">Hi! I'm an AI assistant. Ask me anything about Richard's resume, like "What are his key skills?" or "Tell me about his sports analytics project."</p>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 border-t border-cyan-500/30">
-                <form id="chat-form" class="flex items-center gap-2">
-                    <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 bg-gray-900 border border-cyan-500/50 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm font-sans">
-                    <button type="submit" class="bg-cyan-500 text-black p-2 rounded-lg hover:bg-cyan-400 transition-colors">
-                        <i data-lucide="send" class="w-5 h-5"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
 
     <script>
         // Initialize Lucide icons
@@ -748,134 +703,6 @@
             }
         });
 
-
-        // AI Chatbot UI Logic
-        const chatBubble = document.getElementById('chat-bubble');
-        const chatWindow = document.getElementById('chat-window');
-        const closeChat = document.getElementById('close-chat');
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
-        const chatMessages = document.getElementById('chat-messages');
-
-        chatBubble.addEventListener('click', () => {
-            chatWindow.classList.toggle('hidden');
-            chatWindow.classList.toggle('flex');
-        });
-
-        closeChat.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
-            chatWindow.classList.remove('flex');
-        });
-
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const message = chatInput.value.trim();
-            if (message) {
-                addMessage(message, 'user');
-                chatInput.value = '';
-                getAIResponse(message);
-            }
-        });
-
-        function addMessage(text, sender, isLoading = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : ''}`;
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = `p-3 rounded-lg max-w-xs text-sm ${sender === 'user' ? 'bg-cyan-600 text-white' : 'bg-gray-700'}`;
-            
-            if (isLoading) {
-                contentDiv.innerHTML = `<div class="flex items-center space-x-2"><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div></div>`;
-                messageDiv.id = 'loading-indicator';
-            } else {
-                contentDiv.textContent = text;
-            }
-            
-            messageDiv.appendChild(contentDiv);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function getAIResponse(userQuery) {
-            addMessage('', 'bot', true);
-
-            const systemPrompt = `
-                You are a helpful AI assistant for Richard Rice's personal portfolio website. 
-                Your goal is to answer questions from potential employers based *only* on the information provided below.
-                Be friendly, professional, and concise. Do not make up information. If a question is outside the scope of the provided resume, politely state that you can only answer questions about Richard's professional background.
-
-                --- RESUME INFORMATION ---
-                Name: Richard Rice
-                Title: AI Professional
-
-                Professional Summary: 
-                An aspiring AI professional building a strong foundation in generative AI tools and prompt engineering, with practical experience in models including DALL-E and Claude 3. Has over 10 years of experience in customer service, excelling at analyzing user requests, troubleshooting complex issues, and understanding the core of a problem. This background gives a distinct advantage in creating effective prompts and training AI agents that are intuitive and user-friendly. Seeking a role to apply this blend of technical skill and user-centric insight.
-
-                Key Skills:
-                - Generative AI & Prompt Engineering: Expertise in crafting and refining prompts for high-quality image and media generation using models such as DALL-E, Claude 3, Midjourney, and Stable Diffusion.
-                - AI Agent Development: Foundational knowledge in the process of building and training custom AI agents to address specific, targeted needs and tasks.
-                - User-Centric Analysis: Leveraging over a decade of customer service experience to analyze user requests, accurately interpret intent, and troubleshoot technical issues.
-                - AI Tools: ChatGPT, Gemini, Perplexity.
-                - Art Programs: Proficient in Inkscape, Medibang, Tinkercad, and actively learning Blender.
-
-                Projects:
-                1. AI-Powered Gamified Task Manager: Engineered a daily agenda application in Python that uses the Gemini API to generate personalized task lists for users. Implemented a gamification system that rewards users with experience points and in-game currency upon task completion to drive engagement and user retention.
-                2. AI Sports Analytics Chatbot: Developed a sports analytics tool using Python and the Gemini API to retrieve and present detailed player statistics based on user queries. Built an interactive chatbot that provides sports betting odds and tips, leveraging conversational AI to simulate a knowledgeable sports analyst. Integrated a feature to record and recall previous chat logs.
-                3. Interactive AI-Generated Narrative: Authored a "Choose Your Own Adventure" story in the horror genre, utilizing Gemini API to generate the core narrative, branching plotlines, and descriptive text. Employed advanced prompt engineering techniques to deconstruct the AI-generated story into interactive segments.
-
-                Professional Experience:
-                - DoorDash (Dasher/Delivery Driver, 2022-Present): Maintained a 4.9-star customer rating, resolved delivery issues.
-                - Asurion (Tech Coach, 2014-2017): Resolved 50+ technical issues weekly, achieved a top 10% Net Promoter Score (NPS), trained new hires.
-                - Droidscanada.ca (Content Creator & Reviewer, 2012-2019): Produced 100+ podcasts, reviews, and interviews.
-
-                Contact:
-                - Email: rickrice2nd@gmail.com
-                - LinkedIn: https://www.linkedin.com/in/rickriceaigeneratedloki/
-                --- END OF RESUME INFORMATION ---
-            `;
-
-            const apiKey = ""; // API key is handled by the environment
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-            };
-            
-            let responseText = "Sorry, I encountered an error. Please try again.";
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-
-                const result = await response.json();
-                const candidate = result.candidates?.[0];
-
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    responseText = candidate.content.parts[0].text;
-                } else {
-                   responseText = "I'm sorry, I couldn't generate a response. Please rephrase your question.";
-                }
-
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-            } finally {
-                const loadingIndicator = document.getElementById('loading-indicator');
-                if (loadingIndicator) {
-                    loadingIndicator.remove();
-                }
-                addMessage(responseText, 'bot');
-            }
-        }
     </script>
 </body>
 </html>
